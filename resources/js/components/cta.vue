@@ -3,14 +3,13 @@
         <div class="p-8 md:p-12 lg:px-16 lg:py-24">
             <div class="mx-auto max-w-lg text-center">
                 <h2 class="text-2xl font-bold text-gray-900 md:text-3xl">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit
+                    Temukan Keajaiban Kecantikan dengan Produk Kami
                 </h2>
 
                 <p class="hidden text-gray-500 sm:mt-4 sm:block">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Quae dolor officia blanditiis repellat in, vero, aperiam
-                    porro ipsum laboriosam consequuntur exercitationem incidunt
-                    tempora nisi?
+                    Jelajahi rangkaian kosmetik kami yang dirancang untuk
+                    membuat Anda tampil menawan. Produk berkualitas tinggi,
+                    ramah kulit, dan aman digunakan setiap hari.
                 </p>
             </div>
 
