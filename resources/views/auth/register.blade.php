@@ -22,7 +22,7 @@
     <!-- custom Css-->
     <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
 
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -66,7 +66,7 @@
                                     <p class="text-muted">Get your free velzon account now</p>
                                 </div>
                                 <div class="p-2 mt-4">
-                                    <form class="needs-validation" novalidate method="POST" action="{{ route('register') }}">
+                                    <form id="registerForm" class="needs-validation" novalidate method="POST" action="{{ route('register') }}">
                                         @csrf
                                         <div class="mb-3">
                                             <label for="useremail" class="form-label">Email <span class="text-danger">*</span></label>
@@ -134,6 +134,7 @@
                                                 <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button>
                                             </div>
                                         </div>
+                                        <div id="alert-container" class="mt-4"></div>
                                     </form>
 
                                 </div>
@@ -188,6 +189,45 @@
     <script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
     <!-- password create init -->
     <script src="{{ asset('assets/js/pages/passowrd-create.init.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#registerForm').on('submit', function(event) {
+                event.preventDefault();
+                
+                var form = $(this);
+                var alertContainer = $('#alert-container');
+                var formData = form.serialize();
+        
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if (response.errors) {
+                            var errorsHtml = '<div class="alert alert-danger" role="alert"><ul>';
+                            $.each(response.errors, function(key, value) {
+                                errorsHtml += '<li>' + value + '</li>';
+                            });
+                            errorsHtml += '</ul></div>';
+                            alertContainer.html(errorsHtml);
+                        } else {
+                            window.location.href = response.redirect;
+                        }
+                    },
+                    error: function(xhr) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorsHtml = '<div class="alert alert-danger" role="alert"><ul>';
+                        $.each(errors, function(key, value) {
+                            errorsHtml += '<li>' + value + '</li>';
+                        });
+                        errorsHtml += '</ul></div>';
+                        alertContainer.html(errorsHtml);
+                    }
+                });
+            });
+        });
+    </script>        
 </body>
 
 </html>
