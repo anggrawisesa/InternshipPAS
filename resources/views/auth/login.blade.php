@@ -93,6 +93,7 @@
                                                 <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button>
                                             </div>
                                         </div>
+                                        <div id="alert-container" class="mt-4"></div>
                                     </form>
                                 </div>
                             </div>
@@ -135,13 +136,15 @@
     <script>
         (function () {
             'use strict';
-
+        
             var form = document.getElementById('loginForm');
             var inputs = form.querySelectorAll('input[required]');
-
+            var alertContainer = document.getElementById('alert-container');
+        
             form.addEventListener('submit', function (event) {
+                event.preventDefault();
                 var isValid = true;
-
+        
                 inputs.forEach(function (input) {
                     if (!input.value) {
                         input.classList.add('is-invalid');
@@ -150,13 +153,34 @@
                         input.classList.remove('is-invalid');
                     }
                 });
-
-                if (!isValid) {
-                    event.preventDefault();
-                    event.stopPropagation();
+        
+                if (isValid) {
+                    var formData = new FormData(form);
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.errors) {
+                            var errorsHtml = '<div class="alert alert-danger" role="alert"><ul>';
+                            for (var key in data.errors) {
+                                errorsHtml += '<li>' + data.errors[key] + '</li>';
+                            }
+                            errorsHtml += '</ul></div>';
+                            alertContainer.innerHTML = errorsHtml;
+                        } else {
+                            window.location.href = data.redirect;
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
                 }
             });
-
+        
             inputs.forEach(function (input) {
                 input.addEventListener('input', function () {
                     if (input.value) {
@@ -166,6 +190,7 @@
             });
         })();
     </script>
+        
 </body>
 
 </html>
